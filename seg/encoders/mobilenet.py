@@ -8,7 +8,7 @@ class MobileNet(nn.Module):
         super(MobileNet, self).__init__()
         assert backbone_name in mobilenet_encoders.keys()
         backbone = mobilenet.__dict__[backbone_name](pretrained=pretrained, **kwargs)
-        return_layers = {"3": "1", "6": "2", "13": "3", "18": "4"}
+        return_layers = {"1": "out_1", "3": "out_2", "6": "out_3", "13": "out_4", "18": "out_5"}
         self.backbone = IntermediateLayerGetter(backbone.features, return_layers=return_layers)
         self.out_channels = out_channels
 
@@ -20,7 +20,7 @@ mobilenet_encoders = {
     "mobilenet_v2": {
         "encoder": MobileNet,
         "params": {
-            "out_channels": (24, 32, 96, 1280)
+            "out_channels": (16, 24, 32, 96, 1280)
         }
     }
 }

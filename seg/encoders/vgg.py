@@ -15,12 +15,11 @@ class VGG(nn.Module):
         self.out_channels = out_channels
 
     def get_return_layers(self, backbone):
-        stage_idx = 0
+        stage_idx = 1
         return_layers = {}
         for name, module in backbone.features.named_modules():
             if isinstance(module, nn.MaxPool2d):
-                if stage_idx >= 1:
-                    return_layers.update({name: str(stage_idx)})
+                return_layers.update({name: f"out_{stage_idx}"})
                 stage_idx += 1
 
         return return_layers
@@ -32,7 +31,7 @@ class VGG(nn.Module):
 default_vgg = {
     "encoder": VGG,
     "params": {
-        "out_channels": (256, 512, 512, 512)
+        "out_channels": (128, 256, 512, 512, 512)
     }
 }
 vgg_encoders = {
