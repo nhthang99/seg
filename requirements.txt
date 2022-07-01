@@ -2,3 +2,4 @@
 torch==1.6.0 
 torchvision==0.7.0
 pytorch-ignite==0.4.9
+imgaug==0.4.0

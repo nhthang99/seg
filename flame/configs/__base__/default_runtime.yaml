@@ -1,0 +1,67 @@
+screenlogger:
+  module: flame.handlers.screen_logger
+  class: ScreenLogger
+  ScreenLogger:
+    eval_names:
+      - '''train'''
+      - '''valid'''
+
+history:
+  module: flame.handlers.checkpoint
+  class: History
+
+checkpoint_loader:
+  module: flame.handlers.checkpoint
+  class: CheckpointLoader
+  CheckpointLoader:
+    checkpoint_path: ''''''
+    mode: '''train'''
+
+terminate_on_nan:
+  module: flame.handlers.terminate_on_nan
+  class: TerminateOnNan
+
+lr_scheduler:
+  module: flame.handlers.lr_scheduler
+  class: ReduceLROnPlateau
+  ReduceLROnPlateau:
+    score_name: '''loss'''
+    evaluator_name: '''valid_evaluator'''
+    mode: '''min'''
+    patience: 5
+    verbose: True
+
+early_stopping:
+  module: flame.handlers.early_stopping
+  class: EarlyStopping
+  EarlyStopping:
+    patience: 10
+    score_name: '''loss'''
+    evaluator_name: '''valid_evaluator'''
+    mode: '''min'''
+
+best_saver:
+  module: flame.handlers.checkpoint
+  class: BestSaver
+  BestSaver:
+    dirname: config['checkpoint_dir']
+    score_name: '''loss'''
+    evaluator_name: '''valid_evaluator'''
+    mode: '''min'''
+    n_saved: 1
+
+backup_saver:
+  module: flame.handlers.checkpoint
+  class: BackupSaver
+  BackupSaver:
+    modules:
+      - '''model'''
+      - '''optim'''
+      - '''backup_saver'''
+      - '''best_saver'''
+      - '''history'''
+      - '''lr_scheduler'''
+      - '''early_stopping'''
+    dirname: config['checkpoint_dir']
+    save_interval: 1
+    n_saved: 1
