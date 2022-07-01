@@ -8,7 +8,10 @@ class DenseNet(nn.Module):
         super(DenseNet, self).__init__()
         assert backbone_name in densenet_encoders.keys()
         backbone = densenet.__dict__[backbone_name](pretrained=pretrained, **kwargs)
-        return_layers = {"relu0": "out_1", "transition1": "out_2", "transition2": "out_3", "transition3": "out_4", "norm5": "out_5"}
+        return_layers = {
+            "relu0": "out_1", "denseblock1": "out_2", "denseblock2": "out_3",
+            "denseblock3": "out_4", "norm5": "out_5"
+        }
         self.backbone = IntermediateLayerGetter(backbone.features, return_layers=return_layers)
         self.out_channels = out_channels
 
@@ -23,6 +26,12 @@ densenet_encoders = {
             "out_channels": (64, 256, 512, 1024, 1024),
         },
     },
+    "densenet161": {
+        "encoder": DenseNet,
+        "params": {
+            "out_channels": (96, 384, 768, 2112, 2208),
+        },
+    },
     "densenet169": {
         "encoder": DenseNet,
         "params": {
@@ -33,12 +42,6 @@ densenet_encoders = {
         "encoder": DenseNet,
         "params": {
             "out_channels": (64, 256, 512, 1792, 1920),
-        },
-    },
-    "densenet161": {
-        "encoder": DenseNet,
-        "params": {
-            "out_channels": (96, 384, 768, 2112, 2208),
         },
     },
 }
