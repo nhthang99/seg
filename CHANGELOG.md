@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Add encoder wrapper and a few supported backbones (ResNet, VGG, DenseNet, MobileNetv2)
+- Add encoder wrapper from [@nhthang99](https://github.com/nhthang99)
+- Add a few supported backbones (ResNet, VGG, DenseNet, MobileNetv2) from [@nhthang99](https://github.com/nhthang99)
+- Add decoder wrapper from [@nhthang99](https://github.com/nhthang99)
+- Add UNet decoder from [@nhthang99](https://github.com/nhthang99)
 ### Fixed
 ### Changed
