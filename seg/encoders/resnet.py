@@ -9,7 +9,7 @@ class Resnet(nn.Module):
     def __init__(self, backbone_name, out_channels, pretrained=False, **kwargs) -> None:
         super(Resnet, self).__init__()
         assert backbone_name in resnet_encoders.keys()
-        return_layers = {"bn1": "out_1", "layer1": "out_2", "layer2": "out_3", "layer3": "out_4", "layer4": "out_5"}
+        return_layers = {"relu": "out_1", "layer1": "out_2", "layer2": "out_3", "layer3": "out_4", "layer4": "out_5"}
         backbone = resnet.__dict__[backbone_name](pretrained=pretrained, **kwargs)
         self.backbone = IntermediateLayerGetter(backbone, return_layers=return_layers)
         self.out_channels = out_channels

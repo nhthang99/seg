@@ -15,12 +15,17 @@ class VGG(nn.Module):
         self.out_channels = out_channels
 
     def get_return_layers(self, backbone):
-        stage_idx = 1
+        pool_idx = 0
         return_layers = {}
         for name, module in backbone.features.named_modules():
+            # Get feature map at RELU layer before pooling layer
             if isinstance(module, nn.MaxPool2d):
-                return_layers.update({name: f"out_{stage_idx}"})
-                stage_idx += 1
+                if 1 <= pool_idx <= 3:
+                    return_layers.update({str(int(name) - 1): f"out_{pool_idx}"})
+                elif pool_idx == 4:
+                    return_layers.update({str(int(name) - 1): f"out_{pool_idx}"})
+                    return_layers.update({name: f"out_{pool_idx + 1}"})
+                pool_idx += 1
 
         return return_layers
 
