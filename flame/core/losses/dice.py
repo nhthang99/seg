@@ -26,7 +26,7 @@ class DiceLoss(LossBase):
     def init(self):
         return super().init()
 
-    def forward(self, pred: torch.Tensor, target: torch.Tensor):
+    def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
         """Dice loss implementation
         Supported modes: binary, multi-class and multi-label
         Args:

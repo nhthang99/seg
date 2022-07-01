@@ -1,17 +1,19 @@
 from typing import Any, Callable
 
+import torch
+
 from flame.module import ModuleBase
 
 
 class LossBase(ModuleBase):
-    def __init__(self, output_transform: Callable) -> None:
+    def __init__(self, output_transform: Callable=lambda x: x) -> None:
         super(LossBase, self).__init__()
         self.output_transform = output_transform
 
     def _init(self):
         pass
 
-    def forward(self, *args):
+    def forward(self, *args) -> torch.Tensor:
         raise NotImplementedError
 
     def __call__(self, *args: Any) -> Any:
