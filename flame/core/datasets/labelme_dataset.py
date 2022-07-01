@@ -116,7 +116,7 @@ class LabelmeDataset(Dataset):
             for class_idx, label_name in enumerate(self.classes):
                 for region in data["shapes"]:
                     if (isinstance(self.classes, list) and region["label"] == label_name) \
-                        or (isinstance(self.classes, dict) and region["label"] in self.classes[label_name]["intra_classes"]):
+                        or (isinstance(self.classes, dict) and region["label"] in self.classes[label_name].get("intra_classes", [])):
                         if region["shape_type"] == "rectangle":
                             xmin, ymin = np.array(region["points"]).min(axis=0)
                             xmax, ymax = np.array(region["points"]).max(axis=0)
