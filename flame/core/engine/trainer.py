@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from flame.engine import Engine
+from flame.core.engine.engine import Engine
 
 
 class Trainer(Engine):
@@ -20,15 +20,17 @@ class Trainer(Engine):
         self.optimizer = self.frame['optim']
         self.loss = self.frame['loss']
         print("Total parameters:", sum(p.numel() for p in self.model.parameters()))
-        print("Number of learnable parameters:", sum(p.numel() for p in self.model.parameters() if p.requires_grad))
-        print("Number of non-learnable parameters:", sum(p.numel() for p in self.model.parameters() if not p.requires_grad))
+        print("Number of learnable parameters:", sum(p.numel() for p in self.model.parameters()
+                                                     if p.requires_grad))
+        print("Number of non-learnable parameters:", sum(p.numel() for p in self.model.parameters()
+                                                         if not p.requires_grad))
 
     def _update(self, engine, batch):
         self.model.train()
         self.optimizer.zero_grad()
         params = [param.to(self.device) if torch.is_tensor(param) else param for param in batch]
         params[0] = self.model(params[0])
-        loss = self.loss(params[0], params[1]) # For BCELoss
+        loss = self.loss(*params)
         loss.backward()
         self.optimizer.step()
         return loss.item()

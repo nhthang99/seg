@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from flame.engine import Engine
+from .engine import Engine
 
 
 class Evaluator(Engine):
