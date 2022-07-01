@@ -7,7 +7,7 @@ class Frame(dict):
         self.config_path = config_path
 
 
-class ModuleBase(ABC):
+class Module(ABC):
     """Abstract module
     Submodules should be inherited from this module
     """
