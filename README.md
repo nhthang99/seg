@@ -6,3 +6,5 @@
 - [VGG family](https://arxiv.org/abs/1409.1556) (VGG11, VGG13, VGG16, VGG19 with/without Batch-norm)
 - [Densenet family](https://arxiv.org/abs/1608.06993) (Densenet121, Densenet161, Densenet169, Densenet201)
 - [MobileNetv2](https://arxiv.org/abs/1801.04381)
+### Supported models:
+- [UNet](https://arxiv.org/abs/1505.04597)
