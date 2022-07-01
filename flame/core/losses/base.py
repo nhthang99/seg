@@ -2,10 +2,10 @@ from typing import Any, Callable
 
 import torch
 
-from flame.module import ModuleBase
+from flame.module import Module
 
 
-class LossBase(ModuleBase):
+class LossBase(Module):
     def __init__(self, output_transform: Callable=lambda x: x) -> None:
         super(LossBase, self).__init__()
         self.output_transform = output_transform
