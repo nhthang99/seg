@@ -28,5 +28,5 @@ if __name__ == '__main__':
         if isinstance(module, Module):
             module.init()
 
-    assert 'trainer' in frame, 'The frame does not have trainer.'
-    state = frame['trainer'].run()
+    assert 'engine' in frame, 'The frame does not have engine.'
+    state = frame['engine'].run()

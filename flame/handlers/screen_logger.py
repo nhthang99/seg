@@ -19,7 +19,7 @@ class ScreenLogger(Module):
         print(msg)
 
     def _log_screen(self, engine):
-        msg = f'Epoch #{engine.state.epoch:3d} - {time.asctime()} - '
+        msg = f'Epoch {engine.state.epoch} - {time.asctime()} - '
         for eval_name in self.eval_names:
             if eval_name not in self.frame['metrics'].metric_values.keys():
                 continue
