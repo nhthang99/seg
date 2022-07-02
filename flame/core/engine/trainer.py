@@ -19,11 +19,6 @@ class Trainer(Engine):
             self.model = nn.DataParallel(self.model)
         self.optimizer = self.frame['optim']
         self.loss = self.frame['loss']
-        print("Total parameters:", sum(p.numel() for p in self.model.parameters()))
-        print("Number of learnable parameters:", sum(p.numel() for p in self.model.parameters()
-                                                     if p.requires_grad))
-        print("Number of non-learnable parameters:", sum(p.numel() for p in self.model.parameters()
-                                                         if not p.requires_grad))
 
     def _update(self, engine, batch):
         self.model.train()
