@@ -49,7 +49,7 @@ class VOCDataset(Dataset):
     def label_encoding(self, label_mask, multi_label=False):
         if multi_label:
             masks = []
-            for idx, (label_name, color) in enumerate(self.classes.items(), start=1):
+            for idx, (label_name, color) in enumerate(self.classes.items()):
                 mask = np.zeros(shape=(label_mask.shape[0], label_mask.shape[1]), dtype=np.uint8)
                 color_arr = np.array(color)[None, None] # [1, 1, 3]
                 mask[(label_mask == color_arr).all(axis=-1)] = 1
@@ -57,7 +57,7 @@ class VOCDataset(Dataset):
             return np.stack(masks, axis=0)
         else:
             mask = np.zeros(shape=(label_mask.shape[0], label_mask.shape[1]), dtype=np.uint8)
-            for idx, (label_name, color) in enumerate(self.classes.items(), start=1):
+            for idx, (label_name, color) in enumerate(self.classes.items()):
                 color_arr = np.array(color)[None, None] # [1, 1, 3]
                 mask[(label_mask == color_arr).all(axis=-1)] = idx
             return mask[None] # [1, H, W]
