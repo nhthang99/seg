@@ -65,8 +65,10 @@ class VOCDataset(Dataset):
     def __getitem__(self, idx: int):
         image_path, label_path = self.data_pairs[idx]
         image = cv2.imread(str(image_path))
-        masks = self.label_encoding(cv2.imread(str(label_path)), multi_label=False)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        mask = cv2.cvtColor(cv2.imread(str(label_path)), cv2.COLOR_BGR2RGB)
 
+        masks = self.label_encoding(mask, multi_label=False)
         image_info = [str(image_path), image.shape[1::-1]] # (W, H)
         masks = [SegmentationMapsOnImage(mask, image.shape) for mask in masks]
 
