@@ -11,7 +11,15 @@ class ScreenLogger(Module):
         self.eval_names = eval_names if eval_names else []
 
     def _started(self, engine):
-        msg = f'{time.asctime()} - STARTED'
+        no_params = sum(p.numel() for p in self.model.parameters())
+        no_learnable_params = sum(p.numel() for p in self.model.parameters()
+                                  if p.requires_grad)
+        no_non_learnable_params = sum(p.numel() for p in self.model.parameters()
+                                      if not p.requires_grad)
+        msg = f'Total parameters: {no_params}\n'
+        msg += f'Number of learnable parameters: {no_learnable_params}\n'
+        msg += f'Number of non-learnable parameters: {no_non_learnable_params}\n'
+        msg += f'{time.asctime()} - STARTED'
         print(msg)
 
     def _completed(self, engine):
@@ -28,7 +36,9 @@ class ScreenLogger(Module):
         print(msg[:-2])
 
     def init(self):
+        assert 'model' in self.frame, 'The frame does not have engine.'
         assert 'engine' in self.frame, 'The frame does not have engine.'
+        self.model = self.frame['model']
         self.frame['engine'].engine.add_event_handler(Events.STARTED, self._started)
         self.frame['engine'].engine.add_event_handler(Events.COMPLETED, self._completed)
         if len(self.eval_names):

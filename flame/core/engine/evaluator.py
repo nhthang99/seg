@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 
 from .engine import Engine
+from ignite.engine import Events
 
 
 class Evaluator(Engine):
@@ -15,6 +16,7 @@ class Evaluator(Engine):
         self.model = self.frame['model'].to(self.device)
         if torch.cuda.device_count() > 1 and self.device != 'cpu':
             self.model = nn.DataParallel(self.model)
+        self.frame['engine'].engine.add_event_handler(Events.EPOCH_COMPLETED, self.run)
 
     def _update(self, engine, batch):
         self.model.eval()
