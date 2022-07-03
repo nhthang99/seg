@@ -24,15 +24,14 @@ class DiceLoss(LossBase):
             pred (torch.Tensor): Prediction mask [B, C, H, W]
             target (torch.Tensor): Target mask [B, C, H, W] or [B, H, W]
         """
-        pred = pred.to(target.dtype)
-
         if self.mode == "multi_class":
             target = F.one_hot(target.long().squeeze(dim=1), self.num_classes)  # [B, 1, H, W] -> [B, H, W, C]
-            target = target.permute(0, 3, 1, 2).contiguous().to(pred.dtype) # [B, H, W, C] -> [B, C, H, W]
+            target = target.permute(0, 3, 1, 2).contiguous() # [B, H, W, C] -> [B, C, H, W]
+        target = target.to(pred.dtype)
+
         bs = pred.size(0)
-        num_classes = pred.size(1)
-        pred = pred.view(bs, num_classes, -1)
-        target = target.view(bs, num_classes, -1)
+        pred = pred.view(bs, -1)
+        target = target.view(bs, -1)
 
         dice_score = self.dice_score(pred, target)
         loss = self.aggregate_loss(1 - dice_score)
@@ -44,6 +43,6 @@ class DiceLoss(LossBase):
 
     def dice_score(self, pred: torch.Tensor, target: torch.Tensor, smooth: float=1e-7):
         assert pred.size() == target.size()
-        inter = pred * target
-        dice_score = (2 * inter + smooth) / (pred + target + smooth)
+        inter = torch.sum(pred * target)
+        dice_score = (2 * inter + smooth) / (pred.sum() + target.sum() + smooth)
         return dice_score
