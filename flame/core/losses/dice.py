@@ -13,18 +13,9 @@ class DiceLoss(LossBase):
     Args:
         LossBase (_type_): _description_
     """
-    def __init__(self, mode="binary", num_classes: Optional[int]=None,
+    def __init__(self, mode, num_classes: Optional[int]=None,
                  output_transform: Callable=lambda x: x) -> None:
-        super(DiceLoss, self).__init__(output_transform)
-        assert mode in ["binary", "multi_class", "multi_label"]
-        self.mode = mode
-        if mode == "multi_class" and isinstance(num_classes, int):
-            raise AttributeError("Attribute `num_classes` should be integer during multi-class mode"
-                                 f"instead of {type(num_classes)}")
-        self.num_classes = num_classes # Only used in multi-class mode
-
-    def init(self):
-        return super().init()
+        super(DiceLoss, self).__init__(mode=mode, num_classes=num_classes, output_transform=output_transform)
 
     def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
         """Dice loss implementation
@@ -33,13 +24,11 @@ class DiceLoss(LossBase):
             pred (torch.Tensor): Prediction mask [B, C, H, W]
             target (torch.Tensor): Target mask [B, C, H, W] or [B, H, W]
         """
-        assert pred.size() == target.size()
         pred = pred.to(target.dtype)
 
-        if self.mode == "multi_class" and target.dim() == 3:
-            target = F.one_hot(target, self.num_classes) # [B, H, W] -> [B, H, W, C]
-            target = target.permute(0, 3, 1, 2) # [B, H, W, C] -> [B, C, H, W]
-
+        if self.mode == "multi_class":
+            target = F.one_hot(target.long().squeeze(dim=1), self.num_classes)  # [B, 1, H, W] -> [B, H, W, C]
+            target = target.permute(0, 3, 1, 2).contiguous().to(pred.dtype) # [B, H, W, C] -> [B, C, H, W]
         bs = pred.size(0)
         num_classes = pred.size(1)
         pred = pred.view(bs, num_classes, -1)
