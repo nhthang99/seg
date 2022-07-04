@@ -27,7 +27,6 @@ class DiceLoss(LossBase):
         if self.mode == "multi_class":
             target = F.one_hot(target.long().squeeze(dim=1), self.num_classes)  # [B, 1, H, W] -> [B, H, W, C]
             target = target.permute(0, 3, 1, 2).contiguous() # [B, H, W, C] -> [B, C, H, W]
-        target = target.to(pred.dtype)
 
         bs = pred.size(0)
         pred = pred.view(bs, -1)
