@@ -39,7 +39,7 @@ class MeanIOU(Metric):
                 union = (p.sum() + t.sum() - inter + self.smooth)
                 miou.append(inter / union)
             mious.append(miou)
-        self._ious = torch.cat(self._ious, torch.tensor(mious))
+        self._ious = torch.cat((self._ious, torch.tensor(mious)), dim=0)
 
     def compute(self) -> float:
         return torch.mean(self._ious).item()
